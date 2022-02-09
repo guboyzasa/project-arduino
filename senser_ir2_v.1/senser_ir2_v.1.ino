@@ -2,13 +2,13 @@
 
 #include <TM1637Display.h> // Download at -> https://github.com/avishorp/TM1637
 
-#define CLK 2           // TM1637 CLK ขา 2
-#define DIO 3           // TM1637 DIO ขา 3
-#define IR_DETECTOR 4   // IR Sensor 1 ขา 4
-#define IR_DETECTOR_2 5  // IR Sensor 2 ขา 5
+#define CLK 2             // TM1637 CLK ขา 2
+#define DIO 3             // TM1637 DIO ขา 3
+#define IR_DETECTOR 4     // IR Sensor 1 ขา 4
+#define IR_DETECTOR_2 5   // IR Sensor 2 ขา 5
 
 bool RUN = false;
-int SEC = 0; 
+int SEC = 0;
 int MILLISEC = 0;
 int HALFSEC = 0;
 
@@ -27,22 +27,26 @@ void setup() {
 }
 
 void loop() {
-  if (digitalRead(IR_DETECTOR) == LOW) { // IR1 ถ้ามีวัตถุเข้าใกล้
-    RUN = !RUN;                     // กลับสถานะ RUN = false
-    LAST_COUNT_TIME = millis();     // เริ่มจับเวลา
+  if (digitalRead(IR_DETECTOR) == LOW) {  // IR1 ถ้ามีวัตถุเข้าใกล้
+    RUN = !RUN;                           // กลับสถานะ RUN = false
+    LAST_COUNT_TIME = millis();           // เริ่มจับเวลา
   }
-  
+
   if (RUN == true) {        // สถานะ RUN = true
     MAIN_COUNT();           // ทำงานใน Loop : MAIN_COUNT();
-    
+
     if (digitalRead(IR_DETECTOR_2) == LOW) { // IR2 ถ้ามีวัตถุเข้าใกล้
-      RUN = !RUN;           // กลับสถานะ RUN = false หยุดเวลา
+      RUN = !RUN;                           // กลับสถานะ RUN = false หยุดเวลา
+    }
+    else if(digitalRead(IR_DETECTOR) == LOW){  // IR1 ถ้ามีวัตถุเข้าใกล้
+      RESET_PROGRAM();  //Reset ให้ RUN = false เซ็ตตัวแปรกลับไป = 0 ทั้งหมด
+      LAST_COUNT_TIME = millis(); // เริ่มจับเวลา
     }
   }
 }
 
 // Loop : MAIN_COUNT();
-void MAIN_COUNT() { 
+void MAIN_COUNT() {
 
   GET_COUNT_TIME = millis();
   if (GET_COUNT_TIME - LAST_COUNT_TIME >= 0) {
@@ -65,4 +69,12 @@ void MAIN_COUNT() {
 
     LAST_COUNT_TIME = millis();
   }
+}
+
+// Reset ให้ RUN = false เซ็ตตัวแปรกลับไป = 0 ทั้งหมด
+void RESET_PROGRAM() {
+  RUN = false;
+  HALFSEC = 0;
+  MILLISEC = 0;
+  SEC = 0;
 }
