@@ -47,8 +47,10 @@ void setup() {
 }
 
 void loop() {
-  float humi = dht.readHumidity();          //Read DHT Humi
-  float temp = dht.readTemperature();       //Read DHT Temp
+  float temp=25.50;
+  float humi=51.62;
+//  float humi = dht.readHumidity();          //Read DHT Humi
+//  float temp = dht.readTemperature();       //Read DHT Temp
   DateTime now = rtc.now();              //set Time
   lcd.setCursor(5, 0);
   lcd.print("WELCOME TO");
@@ -56,13 +58,12 @@ void loop() {
   lcd.print("Time: ");
   char buf1[] = "hh:mm:ss";             // set time
   lcd.print(now.toString(buf1));        // Print Time HH:MM:SS
-  lcd.setCursor(9, 3);
-  lcd.print("T:");
+  lcd.setCursor(14, 2);
+  lcd.print("T");
   lcd.print(temp);                         //show temp
-  lcd.setCursor(15, 3);
-  lcd.print("H:");
+  lcd.setCursor(14, 3);
+  lcd.print("H");
   lcd.print(humi);                      //show humi
-  delay(1000);
 
   key = kpd.getKey();
   if (key != NO_KEY) {
@@ -87,15 +88,15 @@ void loop() {
   t6 = t.charAt(7) - 48;
 
   if (t1 == r[0] && t2 == r[1] && t3 == r[2] && t4 == r[3] && t5 < 1 && t6 < 3 && feed == true) {
-    myservo.write(100);
+    myservo.write(180);
     delay(200);
     myservo.write (0);
     delay(200);
-    myservo.write(100);
+    myservo.write(180);
     delay(200);
     myservo.write (0);
     delay(200);
-    myservo.write(100);
+    myservo.write(180);
     delay(200);
     myservo.write (0);
     lcd.clear();
@@ -103,18 +104,18 @@ void loop() {
   }
 }
 void autoSet() {
-  lcd.setCursor(6, 2);
+  lcd.setCursor(3, 2);
   lcd.print("Auto Mode");
   delay(1000);
-  myservo.write(100);
+  myservo.write(180);
   delay(200);
   myservo.write (0);
   delay(200);
-  myservo.write(100);
+  myservo.write(180);
   delay(200);
   myservo.write (0);
   delay(200);
-  myservo.write(100);
+  myservo.write(180);
   delay(200);
   myservo.write (0);
   lcd.clear();
@@ -124,8 +125,8 @@ void setFeedingTime() {
   feed = true;
   int i = 0;
 
-  lcd.setCursor(2, 2);
-  lcd.print("SetTime to HH:MM");
+  lcd.setCursor(0, 2);
+  lcd.print("SetTime HH:MM");
 
   while (1) {
     key = kpd.getKey();
@@ -141,7 +142,7 @@ void setFeedingTime() {
       }
       delay(500);
     }
-    if (key == '#') {
+    if (key == '*') {
       key = 0;
       break;
     }
@@ -157,23 +158,21 @@ void clear() {
 void setManual() {
   feed = true;
   int x = 0;
-  lcd.setCursor(2, 2);
+  lcd.setCursor(0, 2);
   lcd.print("SetManual : ");
   while (1) {
     key = kpd.getKey();
     if (key != NO_KEY) {
-      lcd.setCursor(14, 2);
+      lcd.setCursor(12, 2);
       Serial.print(key);
       lcd.print(key);
       x = key - 49;
       if (x > 0) {
         for (int i = 0; x >= i ; i++) {
-          myservo.write(100);
-          digitalWrite(led, HIGH);
+          myservo.write(180);
           Serial.print("on");
           delay(200);
           myservo.write (0);
-          digitalWrite(led, LOW);
           Serial.print("off");
           delay(200);
         }
